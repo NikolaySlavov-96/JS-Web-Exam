@@ -1,0 +1,53 @@
+<main class="details">
+    <!-- Details page -->
+    <section id="details">
+        <div id="details-wrapper">
+            <p id="details-title">Name: {{animal.name}}</p>
+            <div id="img-wrapper">
+                <img src="{{animal.imgUrl}}" />
+            </div>
+
+            {{#with animal}}
+                <div id="info-wrapper">
+                    <table>
+                        <tr>
+                            <td>
+                                <p>
+                                    Years: <span id="details-years">{{years}}</span>
+                                </p>
+                            </td>
+                            <td>
+                                <p>Kind: <span id="details-kind">{{kind}}</span></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>Need of: <span id="details-need">{{need}}</span></p>
+                            </td>
+                            <td>
+                                <p>Location: <span id="details-location">{{location}}</span></p>
+                            </td>
+                        </tr>
+                    </table>
+                    <p>Description: <span id="details-description">{{description}}</span></p>
+                </div>
+            {{/with}}
+
+            <!--Edit and Delete are only for creator-->
+            {{#if infoData.hasGues}}
+                <div id="action-buttons">
+                    {{#if infoData.isOwner}}
+                        <a href="/animal/edit/{{animal._id}}" id="edit-btn">Edit</a>
+                        <a href="/animal/delete/{{animal._id}}" id="delete-btn">Delete</a>
+                    {{else}}
+                        {{#if infoData.donation}}
+                            <p id="already-donated">You already donated!</p>
+                        {{else}}
+                            <a href="/animal/donate/{{animal._id}}" id="donation-btn">Donation</a>
+                        {{/if}}
+                    {{/if}}
+                </div>
+            {{/if}}
+        </div>
+    </section>
+</main>
