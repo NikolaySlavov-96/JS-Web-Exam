@@ -18,7 +18,19 @@ function isGuest() {
     }
 }
 
+function isOwner() {
+    return (req, res, next) => {
+        if(req.user && res.locals.animal.owner.toString() === req.user._id) {
+            res.locals.isOwner = true;
+            next();
+        } else {
+            res.redirect('/auth/login');
+        }
+    }
+}
+
 module.exports = {
     hasUser,
-    isGuest
+    isGuest,
+    isOwner
 }

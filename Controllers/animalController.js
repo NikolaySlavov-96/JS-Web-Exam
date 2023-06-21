@@ -1,6 +1,6 @@
 const { createAnimal, getAllAnimals, getOneAnimal, updateAnimal, removeById, donateAnimal } = require('../services/animalService');
 
-const { hasUser } = require('../middlewares/guards');
+const { hasUser, isOwner } = require('../middlewares/guards');
 const { partserError } = require('../util/parser');
 const preload = require('../middlewares/preload');
 
@@ -69,7 +69,7 @@ animalController.get('/detail/:id', preload(true), async (req, res) => {
     })
 });
 
-animalController.get('/edit/:id', preload(true), hasUser(), async (req, res) => {
+animalController.get('/edit/:id', preload(true), hasUser(), isOwner(), async (req, res) => {
     const animal = res.locals.animal;
 
     res.render('edit', {
@@ -78,13 +78,9 @@ animalController.get('/edit/:id', preload(true), hasUser(), async (req, res) => 
     })
 });
 
-animalController.post('/edit/:id', preload(), async (req, res) => {
+animalController.post('/edit/:id', preload(), isOwner(), async (req, res) => {
     const id = req.params.id;
     const animalIn = res.locals.animal;
-
-    if (animalIn.owner.toString() !== req.user._id) {
-        return res.redirect('/auth/login');
-    }
 
     const body = req.body;
     const animal = {
@@ -114,14 +110,8 @@ animalController.post('/edit/:id', preload(), async (req, res) => {
     }
 });
 
-animalController.get('/delete/:id', hasUser(), preload(), async (req, res) => {
+animalController.get('/delete/:id', hasUser(), preload(), isOwner(), async (req, res) => {
     const id = req.params.id;
-
-    const animal = res.locals.animal;
-
-    if(animal.owner !== req.user._id) {
-        return res.redirect('/auth/login');
-    }
 
     await removeById(id);
     res.redirect('/animal/catalog')
