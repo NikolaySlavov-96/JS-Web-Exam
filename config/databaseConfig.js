@@ -1,7 +1,7 @@
 const mongoDB = require('mongoose');
 
-const CONNECT_STRING = 'mongodb://localhost:27017/';
-// const CONNECT_STRING = 'mongodb://192.168.88.50:27017/';
+// const CONNECT_STRING = 'mongodb://localhost:27017/';
+const CONNECT_STRING = 'mongodb://192.168.88.50:27017/';
 
 const DB_NAME = 'friendlyWorld'
 

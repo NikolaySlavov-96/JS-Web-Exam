@@ -2,6 +2,7 @@ const { createAnimal, getAllAnimals, getOneAnimal, updateAnimal, removeById, don
 
 const { hasUser } = require('../middlewares/guards');
 const { partserError } = require('../util/parser');
+const preload = require('../middlewares/preload');
 
 const animalController = require('express').Router();
 
@@ -49,8 +50,8 @@ animalController.post('/create', async (req, res) => {
     }
 })
 
-animalController.get('/detail/:id', async (req, res) => {
-    const animal = await getOneAnimal(req.params.id);
+animalController.get('/detail/:id', preload(true), async (req, res) => {
+    const animal = res.locals.animal;
     const infoData = {
         isOwner: animal.owner.toString() === req?.user?._id ? true : false,
         hasGues: req.user,
@@ -68,24 +69,22 @@ animalController.get('/detail/:id', async (req, res) => {
     })
 });
 
-animalController.get('/edit/:id', hasUser(), async (req, res) => {
-    const animal = await getOneAnimal(req.params.id);
-    
+animalController.get('/edit/:id', preload(true), hasUser(), async (req, res) => {
+    const animal = res.locals.animal;
+
     res.render('edit', {
         title: 'Edit Page',
         animal,
     })
 });
 
-animalController.post('/edit/:id', async (req, res) => {
+animalController.post('/edit/:id', preload(), async (req, res) => {
     const id = req.params.id;
-    const animalIn = await getOneAnimal(id);
+    const animalIn = res.locals.animal;
 
     if (animalIn.owner.toString() !== req.user._id) {
         return res.redirect('/auth/login');
     }
-
-    console.log(animalIn)
 
     const body = req.body;
     const animal = {
@@ -103,7 +102,7 @@ animalController.post('/edit/:id', async (req, res) => {
             throw new Error('All fields is required');
         }
 
-        await updateAnimal(id, animal);
+        await updateAnimal(animalIn, animal);
         res.redirect('/animal/detail/' + id);
 
     } catch (err) {
@@ -115,8 +114,14 @@ animalController.post('/edit/:id', async (req, res) => {
     }
 });
 
-animalController.get('/delete/:id', hasUser(), async (req, res) => {
+animalController.get('/delete/:id', hasUser(), preload(), async (req, res) => {
     const id = req.params.id;
+
+    const animal = res.locals.animal;
+
+    if(animal.owner !== req.user._id) {
+        return res.redirect('/auth/login');
+    }
 
     await removeById(id);
     res.redirect('/animal/catalog')

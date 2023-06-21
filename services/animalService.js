@@ -17,8 +17,12 @@ async function getOneAnimal(id) {
     return Animal.findById(id).lean();
 }
 
-async function updateAnimal(id, data) {
-    const inputData = await Animal.findById(id);
+async function getOneAnimalRaw(id) {
+    return Animal.findById(id);
+}
+
+async function updateAnimal(inputData, data) {
+    // const inputData = await Animal.findById(id);
 
     inputData.name = data.name;
     inputData.years = data.years;
@@ -47,6 +51,7 @@ module.exports = {
     getLastThree,
     createAnimal,
     getOneAnimal,
+    getOneAnimalRaw,
     updateAnimal,
     removeById,
     donateAnimal
