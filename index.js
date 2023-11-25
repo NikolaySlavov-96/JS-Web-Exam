@@ -1,7 +1,8 @@
+require('dotenv').config();
 const https = require('https');
 const fs = require('fs');
 const express = require('express');
-const PORT_LISTEN = 3000;
+const PORT_LISTEN = process.env.PORT;
 const databaseConfig = require('./config/databaseConfig');
 const expressConfig = require('./config/expressConfig');
 const routerConfig = require('./config/routerConfig');
