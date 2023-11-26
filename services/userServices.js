@@ -3,7 +3,7 @@ const bcryp = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../Models/User');
 
-const JWT_SECTER = process.env.JWT_SECTER;
+const JWT_SECTER = process.env.JWT_SECRETS;
 
 async function register(email, password) {
 
