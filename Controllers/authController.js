@@ -55,6 +55,10 @@ authController.post('/register', async (req, res) => {
             throw new Error('Password is very short. Min 4 characters');
         }
 
+        if(!body.password.match(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])((?=.*\W)|(?=.*_))^[^ ]+$/)) {
+            throw new Error('Incorrect type of password')
+        }
+
         if (body.password !== body.rePassword) {
             throw new Error('Password don\'t match')
         }
