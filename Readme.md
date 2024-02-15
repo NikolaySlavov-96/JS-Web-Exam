@@ -1,5 +1,8 @@
-Required variables to run the application
+Project can be view of on: https://backend.slavo-v.dev/
 
+This project is development of JS, and using NodeJS, ExpressJS and database mongoDB wtih ODM - mongoose.
+
+Required variables to run the application:
 PORT='',
 DB_ADDRESS=''
 DB_USER='',
